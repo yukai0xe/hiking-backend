@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\hikingService\hikingService.csproj" />
+      <ProjectReference Include="..\hiking.Service\hiking.Service.csproj" />
     </ItemGroup>
 
 </Project>

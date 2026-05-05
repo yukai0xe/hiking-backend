@@ -4,10 +4,12 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>hikingRepository</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\hikingRepository\hikingRepository.csproj" />
+      <PackageReference Include="Dapper" Version="2.1.72" />
+      <PackageReference Include="Npgsql" Version="10.0.2" />
     </ItemGroup>
 
 </Project>
