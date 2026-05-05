@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hiking-controller", "hiking-controller\hiking-controller.csproj", "{0807E792-8826-435D-8673-C8929291C3D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hikingService", "hikingService\hikingService.csproj", "{FF54A17C-754F-4140-A4B3-C39D243BD76A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hikingRepository", "hikingRepository\hikingRepository.csproj", "{43C0D307-6F52-4C5F-8267-715ECC26E1FB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0807E792-8826-435D-8673-C8929291C3D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0807E792-8826-435D-8673-C8929291C3D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0807E792-8826-435D-8673-C8929291C3D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0807E792-8826-435D-8673-C8929291C3D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF54A17C-754F-4140-A4B3-C39D243BD76A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF54A17C-754F-4140-A4B3-C39D243BD76A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF54A17C-754F-4140-A4B3-C39D243BD76A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF54A17C-754F-4140-A4B3-C39D243BD76A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43C0D307-6F52-4C5F-8267-715ECC26E1FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43C0D307-6F52-4C5F-8267-715ECC26E1FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43C0D307-6F52-4C5F-8267-715ECC26E1FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43C0D307-6F52-4C5F-8267-715ECC26E1FB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

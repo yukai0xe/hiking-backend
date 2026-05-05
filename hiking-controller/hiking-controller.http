@@ -1,0 +1,6 @@
+@hiking_controller_HostAddress = http://localhost:5253
+
+GET {{hiking_controller_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
