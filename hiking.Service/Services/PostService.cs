@@ -20,12 +20,12 @@ public class PostService(PostRepository repo, StorageService storage, GpxService
       var (dateStart, dateEnd) = (cmd.DateStart, cmd.DateEnd);
       if (cmd.GpxFile is not null)
       {
+          if (string.IsNullOrEmpty(dateStart))
+              (dateStart, dateEnd) = await gpx.ExtractDatesAsync(cmd.GpxFile.Stream);
+          
           gpxUrl = await storage.UploadAsync(
               "gpx", $"{id}-{ts}.gpx",
               cmd.GpxFile.Stream, cmd.GpxFile.ContentType);
-
-          if (string.IsNullOrEmpty(dateStart))
-              (dateStart, dateEnd) = await gpx.ExtractDatesAsync(cmd.GpxFile.Stream);
       }
 
       await repo.InsertPostAsync(new PostModel()
@@ -73,12 +73,12 @@ public class PostService(PostRepository repo, StorageService storage, GpxService
       var (dateStart, dateEnd) = (cmd.DateStart, cmd.DateEnd);
       if (cmd.GpxFile is not null)
       {
+          if (string.IsNullOrEmpty(cmd.DateStart))
+              (dateStart, dateEnd) = await gpx.ExtractDatesAsync(cmd.GpxFile.Stream);
+          
           gpxFile = await storage.UploadAsync(
               "gpx", $"{id}-{ts}.gpx",
               cmd.GpxFile.Stream, cmd.GpxFile.ContentType);
-
-          if (string.IsNullOrEmpty(cmd.DateStart))
-              (dateStart, dateEnd) = await gpx.ExtractDatesAsync(cmd.GpxFile.Stream);
       }
 
       await repo.UpdatePostAsync(id, new

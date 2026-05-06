@@ -67,8 +67,13 @@ public class PostsController(PostService svc) : ControllerBase
         return NoContent();
     }
 
-    private static FileData ToFileData(IFormFile f) =>
-        new(f.OpenReadStream(), f.FileName, f.ContentType);
+    private static FileData ToFileData(IFormFile f)
+    {
+        var ms = new MemoryStream((int)f.Length);
+        f.CopyTo(ms);
+        ms.Position = 0;
+        return new FileData(ms, f.FileName, f.ContentType);
+    }
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)

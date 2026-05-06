@@ -1,10 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hiking-controller", "hiking-controller\hiking-controller.csproj", "{0807E792-8826-435D-8673-C8929291C3D8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hiking.WebApi", "hiking.WebApi\hiking.WebApi.csproj", "{0807E792-8826-435D-8673-C8929291C3D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hikingService", "hikingService\hikingService.csproj", "{FF54A17C-754F-4140-A4B3-C39D243BD76A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hiking.Service", "hiking.Service\hiking.Service.csproj", "{FF54A17C-754F-4140-A4B3-C39D243BD76A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hikingRepository", "hikingRepository\hikingRepository.csproj", "{43C0D307-6F52-4C5F-8267-715ECC26E1FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hiking.Repository", "hiking.Repository\hiking.Repository.csproj", "{43C0D307-6F52-4C5F-8267-715ECC26E1FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

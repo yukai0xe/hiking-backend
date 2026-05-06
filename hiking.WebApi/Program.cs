@@ -9,6 +9,12 @@ DefaultTypeMap.MatchNamesWithUnderscores = true;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+    options.AddPolicy("AllowLocalhost", policy =>
+        policy.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
+            .AllowAnyHeader()
+            .AllowAnyMethod()));
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -23,6 +29,11 @@ builder.Services.AddHttpClient<StorageService>();
 builder.Services.AddScoped<GpxService>();
 builder.Services.AddScoped<PostRepository>();
 builder.Services.AddScoped<PostService>();
+builder.Services.AddScoped<TagRepository>();
+builder.Services.AddScoped<TagService>();
+builder.Services.AddScoped<PhotoRepository>();
+builder.Services.AddScoped<PhotoService>();
+
 builder.Services.AddSingleton(
     NpgsqlDataSource.Create(supabaseOptions.ConnectionString)
 );
@@ -46,6 +57,7 @@ app.MapGet("/health", async (NpgsqlDataSource db) =>
     return Results.Ok(new { connected = true, result });
 });
 
+app.UseCors("AllowLocalhost");
 app.UseHttpsRedirection();
 app.MapControllers(); 
 app.Run();
