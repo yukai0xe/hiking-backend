@@ -21,10 +21,9 @@ public class UpdatePostRequest
 {
     public string Title { get; set; } = "";
     public string Description { get; set; } = "";
-    public IFormFile? CoverFile { get; set; }
-    public IFormFile? GpxFile { get; set; }
-    public List<IFormFile> PhotoFilesToAdd { get; set; } = [];
     public List<Guid> PhotoIdsToDelete { get; set; } = [];
+    public List<GearInputDto> GearsToAdd { get; set; } = [];
+    public List<Guid> GearIdsToDelete { get; set; } = [];
     public string? DateStart { get; set; }
     public string? DateEnd { get; set; }
     public string? Weather { get; set; }

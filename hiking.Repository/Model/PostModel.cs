@@ -6,6 +6,7 @@ public class PostModel
     public string Title { get; set; } = "";
     public string Description { get; set; } = "";
     public string CoverImage { get; set; } = "";
+    public string CompressedCoverImage { get; set; } = "";
     public string GpxFile { get; set; } = "";
     public DateTime CreatedAt { get; set; }
     public string? DateStart { get; set; }

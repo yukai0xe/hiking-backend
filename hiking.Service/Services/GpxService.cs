@@ -1,8 +1,11 @@
 ﻿using System.Xml.Linq;
+using hikingRepository.Model;
+using hikingRepository.Repositories;
+using hikingService.Services;
 
 namespace hikingService;
 
-public class GpxService
+public class GpxService(PostRepository postRepo, StorageService storage)
 {
     public Task<(string? DateStart, string? DateEnd)> ExtractDatesAsync(Stream stream)
     {
@@ -18,5 +21,29 @@ public class GpxService
 
         return Task.FromResult<(string?, string?)>(
             (times.First().Split('T')[0], times.Last().Split('T')[0]));
+    }
+
+    public async Task UpdateGpxAsync(Guid id, FileData gpxFile)
+    {
+        var existing = await postRepo.GetByIdAsync(id) ?? throw new KeyNotFoundException();
+        var ts = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+        var gpxUrl = existing.GpxFile;
+        // var (dateStart, dateEnd) = (cmd.DateStart, cmd.DateEnd);
+        if (gpxFile is not null)
+        {
+            // if (string.IsNullOrEmpty(cmd.DateStart))
+            //     (dateStart, dateEnd) = await gpx.ExtractDatesAsync(cmd.GpxFile.Stream);
+          
+            gpxUrl = await storage.UploadAsync(
+                "gpx", $"{id}-{ts}.gpx",
+               gpxFile.Stream, gpxFile.ContentType);
+        }
+
+        await postRepo.UpdatePostGpxAsync(id, new
+        {
+            Id = id,
+            GpxUrl = gpxUrl
+        });
     }
 }

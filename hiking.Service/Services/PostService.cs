@@ -5,16 +5,24 @@ using hikingService.Dtos;
 
 namespace hikingService.Services;
 
-public class PostService(PostRepository repo, StorageService storage, GpxService gpx)
+public class PostService(PostRepository repo, StorageService storage, GpxService gpx, PhotoService photo)
 {
   public async Task<Guid> CreateAsync(CreatePostCommand cmd)
   {
       var id = Guid.NewGuid();
       var ts = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        
+      var compressedBytes = await photo.CompressAsync(cmd.CoverFile.Stream);
 
+      var compressedCoverUrl = await storage.UploadAsync(
+          "covers", $"{id}-{ts}.jpg",
+          compressedBytes, "image/jpeg");
+      
+      cmd.CoverFile.Stream.Position = 0;
       var coverUrl = await storage.UploadAsync(
           "covers", $"{id}-{ts}{Ext(cmd.CoverFile.FileName)}",
           cmd.CoverFile.Stream, cmd.CoverFile.ContentType);
+      
 
       var gpxUrl = "";
       var (dateStart, dateEnd) = (cmd.DateStart, cmd.DateEnd);
@@ -34,6 +42,7 @@ public class PostService(PostRepository repo, StorageService storage, GpxService
           Title       = cmd.Title,
           Description = cmd.Description,
           CoverImage  = coverUrl,
+          CompressedCoverImage = compressedCoverUrl,
           GpxFile     = gpxUrl,
           DateStart   = dateStart,
           DateEnd     = dateEnd,
@@ -61,33 +70,12 @@ public class PostService(PostRepository repo, StorageService storage, GpxService
   public async Task UpdateAsync(Guid id, UpdatePostCommand cmd)
   {
       var existing = await repo.GetByIdAsync(id) ?? throw new KeyNotFoundException();
-      var ts = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-
-      var coverImage = existing.CoverImage;
-      if (cmd.CoverFile is not null)
-          coverImage = await storage.UploadAsync(
-              "covers", $"{id}-{ts}{Ext(cmd.CoverFile.FileName)}",
-              cmd.CoverFile.Stream, cmd.CoverFile.ContentType);
-
-      var gpxFile = existing.GpxFile;
       var (dateStart, dateEnd) = (cmd.DateStart, cmd.DateEnd);
-      if (cmd.GpxFile is not null)
-      {
-          if (string.IsNullOrEmpty(cmd.DateStart))
-              (dateStart, dateEnd) = await gpx.ExtractDatesAsync(cmd.GpxFile.Stream);
-          
-          gpxFile = await storage.UploadAsync(
-              "gpx", $"{id}-{ts}.gpx",
-              cmd.GpxFile.Stream, cmd.GpxFile.ContentType);
-      }
-
       await repo.UpdatePostAsync(id, new
       {
           Id          = id,
           Title       = cmd.Title,
           Description = cmd.Description,
-          CoverImage  = coverImage,
-          GpxFile     = gpxFile,
           DateStart   = dateStart,
           DateEnd     = dateEnd,
           Weather     = cmd.Weather,
@@ -96,13 +84,13 @@ public class PostService(PostRepository repo, StorageService storage, GpxService
       });
 
       await repo.DeletePhotosAsync(cmd.PhotoIdsToDelete);
+      await repo.DeleteGearsAsync(cmd.GearIdsToDelete);
 
-      if (cmd.PhotoFilesToAdd.Count > 0)
+      if (cmd.GearsToAdd.Count > 0)
       {
-          var urls = await Task.WhenAll(cmd.PhotoFilesToAdd.Select((f, i) =>
-              storage.UploadAsync("photos", $"{id}-{ts}-add{i}{Ext(f.FileName)}", f.Stream, f.ContentType)));
-          await repo.InsertPhotosAsync(urls.Select(u =>
-              new PhotoModel { Id = Guid.NewGuid(), PostId = id, Url = u, CreatedAt = DateTime.UtcNow }).ToList());
+          await repo.InsertGearsAsync(cmd.GearsToAdd.Select(g =>
+              new GearModel { Id = Guid.NewGuid(), PostId = id, Name = g.Name, Weight = g.Weight, Note = g.Note }
+          ).ToList());
       }
   }
   

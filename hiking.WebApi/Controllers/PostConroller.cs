@@ -45,27 +45,26 @@ public class PostsController(PostService svc) : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Consumes("multipart/form-data")]
-    public async Task<IActionResult> Update(Guid id, [FromForm] UpdatePostRequest req)
+    [Consumes("application/json")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdatePostRequest req)
     {
-        var cmd = new UpdatePostCommand
+        var cmd = new UpdatePostCommand()
         {
-            Title            = req.Title,
-            Description      = req.Description,
-            CoverFile        = req.CoverFile is null ? null : ToFileData(req.CoverFile),
-            GpxFile          = req.GpxFile is null ? null : ToFileData(req.GpxFile),
-            PhotoFilesToAdd  = req.PhotoFilesToAdd.Select(ToFileData).ToList(),
+            Title = req.Title,
+            Description = req.Description,
             PhotoIdsToDelete = req.PhotoIdsToDelete,
-            DateStart        = req.DateStart,
-            DateEnd          = req.DateEnd,
-            Weather          = req.Weather,
-            PeopleCount      = req.PeopleCount,
-            Tags             = req.Tags,
+            GearsToAdd = req.GearsToAdd,
+            GearIdsToDelete = req.GearIdsToDelete,
+            DateStart = req.DateStart,
+            DateEnd = req.DateEnd,
+            Weather = req.Weather,
+            PeopleCount = req.PeopleCount,
+            Tags = req.Tags,
         };
-
         await svc.UpdateAsync(id, cmd);
         return NoContent();
     }
+    
 
     private static FileData ToFileData(IFormFile f)
     {

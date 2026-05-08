@@ -48,10 +48,10 @@ namespace hikingRepository.Repositories;
           await using var conn = await db.OpenConnectionAsync();
           await conn.ExecuteAsync("""
               INSERT INTO posts
-                (id, title, description, cover_image, gpx_file,
+                (id, title, description, cover_image, compressed_cover_image, gpx_file,
                  date_start, date_end, weather, people_count, tags, created_at)
               VALUES
-                (@Id, @Title, @Description, @CoverImage, @GpxFile,
+                (@Id, @Title, @Description, @CoverImage, @CompressedCoverImage, @GpxFile,
                  @DateStart, @DateEnd, @Weather, @PeopleCount, @Tags, @CreatedAt)
               """, post);
       }
@@ -75,6 +75,15 @@ namespace hikingRepository.Repositories;
               VALUES (@Id, @PostId, @Name, @Weight, @Note)
               """, gears);
       }
+      
+      public async Task DeleteGearsAsync(List<Guid> ids)
+      {
+          if (ids.Count == 0) return;
+          await using var conn = await db.OpenConnectionAsync();
+          await conn.ExecuteAsync(
+              "DELETE FROM gears WHERE id = ANY(@Ids)",
+              new { Ids = ids.ToArray() });
+      }
 
       public async Task UpdatePostAsync(Guid id, object updates)
       {
@@ -83,8 +92,6 @@ namespace hikingRepository.Repositories;
               UPDATE posts SET
                 title        = @Title,
                 description  = @Description,
-                cover_image  = @CoverImage,
-                gpx_file     = @GpxFile,
                 date_start   = @DateStart,
                 date_end     = @DateEnd,
                 weather      = @Weather,
@@ -92,6 +99,27 @@ namespace hikingRepository.Repositories;
                 tags         = @Tags
               WHERE id = @Id
               """, updates);
+      }
+
+      public async Task UpdatePostCoverAsync(Guid id, object coverImages)
+      {
+          await using var conn = await db.OpenConnectionAsync();
+          await conn.ExecuteAsync("""
+              UPDATE posts SET
+                cover_image  = @CoverImage,
+                compressed_cover_image = @CompressedCoverImage,
+              WHERE id = @Id
+              """, coverImages);
+      }
+      
+      public async Task UpdatePostGpxAsync(Guid id, object gpx)
+      {
+          await using var conn = await db.OpenConnectionAsync();
+          await conn.ExecuteAsync("""
+                  UPDATE posts SET
+                    gpx_file     = @GpxUrl,
+                  WHERE id = @Id
+                  """, gpx);
       }
 
       public async Task DeletePhotosAsync(List<Guid> ids)

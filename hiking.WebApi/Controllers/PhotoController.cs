@@ -1,4 +1,5 @@
-﻿using hikingService.Services;
+﻿using hikingRepository.Model;
+using hikingService.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace hiking_controller.Controllers;
@@ -12,5 +13,29 @@ public class PhotosController(PhotoService svc) : ControllerBase
     {
         await svc.DeleteAsync(id);
         return NoContent();
+    }
+    
+    [HttpPost("{id:guid}/cover")]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> UpdateCover(Guid id, IFormFile coverFile)
+    {
+        await svc.UpdateCoverAsync(id, ToFileData(coverFile));
+        return NoContent();
+    }
+    
+    [HttpPost("{id:guid}/photos")]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> AddPhotos(Guid id, List<IFormFile> photos)
+    {
+        await svc.AddPhotosAsync(id, photos.Select(ToFileData).ToList());
+        return NoContent();
+    }
+    
+    private static FileData ToFileData(IFormFile f)
+    {
+        var ms = new MemoryStream((int)f.Length);
+        f.CopyTo(ms);
+        ms.Position = 0;
+        return new FileData(ms, f.FileName, f.ContentType);
     }
 }
