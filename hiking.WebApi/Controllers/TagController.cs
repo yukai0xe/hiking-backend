@@ -1,4 +1,5 @@
-﻿using hiking_controller.RequestModel;
+﻿using System.Threading.Tasks;
+using hiking_controller.RequestModel;
 using hikingService.Services;
 using Microsoft.AspNetCore.Mvc;
 

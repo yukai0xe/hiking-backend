@@ -1,5 +1,6 @@
-﻿using hiking_controller.RequestModel;
-using hikingRepository.Model;
+﻿using System;
+using System.Threading.Tasks;
+using hiking_controller.RequestModel;
 using hikingService.Commands;
 using hikingService.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -22,22 +23,20 @@ public class PostsController(PostService svc) : ControllerBase
     }
 
     [HttpPost]
-    [Consumes("multipart/form-data")]
-    public async Task<IActionResult> Create([FromForm] CreatePostRequest req)
+    [Consumes("application/json")]
+    public async Task<IActionResult> Create([FromBody] CreatePostRequest req)
     {
         var cmd = new CreatePostCommand
         {
-            Title       = req.Title,
-            Description = req.Description,
-            CoverFile   = ToFileData(req.CoverFile),
-            GpxFile     = req.GpxFile is null ? null : ToFileData(req.GpxFile),
-            PhotoFiles  = req.PhotoFiles.Select(ToFileData).ToList(),
-            Gears       = req.Gears,
-            DateStart   = req.DateStart,
-            DateEnd     = req.DateEnd,
-            Weather     = req.Weather,
-            PeopleCount = req.PeopleCount,
-            Tags        = req.Tags,
+            Title          = req.Title,
+            Description    = req.Description,
+            Gears          = req.Gears,
+            LibraryGearIds = req.LibraryGearIds,
+            DateStart      = req.DateStart,
+            DateEnd        = req.DateEnd,
+            Weather        = req.Weather,
+            PeopleCount    = req.PeopleCount,
+            Tags           = req.Tags,
         };
 
         var id = await svc.CreateAsync(cmd);
@@ -54,7 +53,9 @@ public class PostsController(PostService svc) : ControllerBase
             Description = req.Description,
             PhotoIdsToDelete = req.PhotoIdsToDelete,
             GearsToAdd = req.GearsToAdd,
+            GearsToUpdate = req.GearsToUpdate,
             GearIdsToDelete = req.GearIdsToDelete,
+            LibraryGearIdsToLink = req.LibraryGearIdsToLink,
             DateStart = req.DateStart,
             DateEnd = req.DateEnd,
             Weather = req.Weather,
@@ -65,14 +66,6 @@ public class PostsController(PostService svc) : ControllerBase
         return NoContent();
     }
     
-
-    private static FileData ToFileData(IFormFile f)
-    {
-        var ms = new MemoryStream((int)f.Length);
-        f.CopyTo(ms);
-        ms.Position = 0;
-        return new FileData(ms, f.FileName, f.ContentType);
-    }
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)

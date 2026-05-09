@@ -1,4 +1,6 @@
-﻿using Dapper;
+﻿using System;
+using System.Threading.Tasks;
+using Dapper;
 using Npgsql;
 
 namespace hikingRepository.Repositories;

@@ -1,4 +1,6 @@
-﻿namespace hikingRepository.Model;
+﻿using System;
+
+namespace hikingRepository.Model;
 
 public class PhotoModel
 {

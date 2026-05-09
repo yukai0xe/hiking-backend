@@ -1,9 +1,14 @@
+using System;
 using Dapper;
 using Npgsql;
 using hikingRepository.Repositories;
-using hikingService;
 using hikingService.Options;
 using hikingService.Services;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 DefaultTypeMap.MatchNamesWithUnderscores = true;
 
@@ -33,6 +38,8 @@ builder.Services.AddScoped<TagRepository>();
 builder.Services.AddScoped<TagService>();
 builder.Services.AddScoped<PhotoRepository>();
 builder.Services.AddScoped<PhotoService>();
+builder.Services.AddScoped<GearRepository>();
+builder.Services.AddScoped<GearService>();
 
 builder.Services.AddSingleton(
     NpgsqlDataSource.Create(supabaseOptions.ConnectionString)

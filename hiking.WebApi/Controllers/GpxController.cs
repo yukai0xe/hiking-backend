@@ -1,5 +1,9 @@
-﻿using hikingRepository.Model;
-using hikingService;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
+using hikingRepository.Model;
+using hikingService.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace hiking_controller.Controllers;

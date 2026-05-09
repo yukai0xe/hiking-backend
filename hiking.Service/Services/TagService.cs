@@ -1,4 +1,6 @@
-﻿using hikingRepository.Repositories;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using hikingRepository.Repositories;
 
 namespace hikingService.Services;
 
