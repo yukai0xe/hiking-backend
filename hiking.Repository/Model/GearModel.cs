@@ -14,4 +14,5 @@ public class GearModel
     public string? ReferenceUrl { get; set; }
     public int? Price { get; set; }
     public string? AddedAt { get; set; }
+    public DateTime? DeletedAt { get; set; }
 }
