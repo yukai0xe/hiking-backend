@@ -14,6 +14,10 @@ public class GearsController(GearService svc) : ControllerBase
     public async Task<IActionResult> GetAll() =>
         Ok(await svc.GetAllGearsAsync());
 
+    [HttpGet("categories")]
+    public async Task<IActionResult> GetCategories() =>
+        Ok(await svc.GetCategoriesAsync());
+
     [HttpPost]
     [Consumes("application/json")]
     public async Task<IActionResult> Create([FromBody] GearInputDto dto)

@@ -48,4 +48,6 @@ public class GearService(GearRepository repo)
     }
 
     public Task DeleteAsync(Guid id) => repo.SoftDeleteAsync(id);
+
+    public Task<List<string>> GetCategoriesAsync() => repo.GetCategoriesAsync();
 }

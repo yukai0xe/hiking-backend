@@ -53,4 +53,12 @@ public class GearRepository(NpgsqlDataSource db)
             "UPDATE gears SET deleted_at = @now WHERE id = @id",
             new { id, now = DateTime.UtcNow });
     }
+
+    public async Task<List<string>> GetCategoriesAsync()
+    {
+        await using var conn = await db.OpenConnectionAsync();
+        return (await conn.QueryAsync<string>(
+            "SELECT name FROM gear_categories ORDER BY name"))
+            .ToList();
+    }
 }
