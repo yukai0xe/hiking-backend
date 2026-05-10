@@ -8,13 +8,14 @@ variables:
 
 build-api:
   stage: build
-  image: docker:latest
-  services:
-    - docker:dind
+  tags:
+    - production
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t $CI_REGISTRY_IMAGE/hiking-backend:$IMAGE_TAG $CI_PROJECT_DIR
+    - docker tag $CI_REGISTRY_IMAGE/hiking-backend:$IMAGE_TAG $CI_REGISTRY_IMAGE/hiking-backend:latest
     - docker push $CI_REGISTRY_IMAGE/hiking-backend:$IMAGE_TAG
+    - docker push $CI_REGISTRY_IMAGE/hiking-backend:latest
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
 
@@ -23,7 +24,7 @@ deploy:
   tags:
     - production
   script:
-    - cd /opt/WebSite
+    - cd /opt/WebSite/hiking
     - export IMAGE_TAG=$IMAGE_TAG
     - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
     - docker compose pull
