@@ -1,6 +1,7 @@
 ﻿FROM mcr.microsoft.com/dotnet/sdk:9.0 AS restore
 
 WORKDIR /src
+
 COPY *.sln .
 COPY hiking.WebApi/hiking.WebApi.csproj ./hiking.WebApi/
 COPY hiking.Service/hiking.Service.csproj ./hiking.Service/
@@ -16,6 +17,12 @@ RUN dotnet publish ./hiking.WebApi/hiking.WebApi.csproj \
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    libgssapi-krb5-2 \
+    ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY --from=build /app/publish .
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://0.0.0.0:8080
