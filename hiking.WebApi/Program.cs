@@ -9,8 +9,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using QuestPDF.Infrastructure;
 
 DefaultTypeMap.MatchNamesWithUnderscores = true;
+QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +42,7 @@ builder.Services.AddScoped<PhotoRepository>();
 builder.Services.AddScoped<PhotoService>();
 builder.Services.AddScoped<GearRepository>();
 builder.Services.AddScoped<GearService>();
+builder.Services.AddSingleton<PdfExportService>();
 
 builder.Services.AddSingleton(
     NpgsqlDataSource.Create(supabaseOptions.ConnectionString)

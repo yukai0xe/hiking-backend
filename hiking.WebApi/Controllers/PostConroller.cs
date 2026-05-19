@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using hiking_controller.RequestModel;
 using hikingService.Commands;
@@ -9,7 +10,7 @@ namespace hiking_controller.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PostsController(PostService svc) : ControllerBase
+public class PostsController(PostService svc, PdfExportService pdfSvc) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetAll() =>
@@ -73,4 +74,18 @@ public class PostsController(PostService svc) : ControllerBase
         await svc.DeleteAsync(id);
         return NoContent();
     }
+
+    [HttpGet("{id:guid}/export/pdf")]
+    public async Task<IActionResult> ExportPdf(Guid id, [FromQuery] bool includeGears = true)
+    {
+        var detail = await svc.GetDetailAsync(id);
+        if (detail is null) return NotFound();
+
+        var bytes    = pdfSvc.Generate(detail, includeGears);
+        var filename = SanitizeFilename(detail.Post.Title) + ".pdf";
+        return File(bytes, "application/pdf", filename);
+    }
+
+    private static string SanitizeFilename(string s) =>
+        Regex.Replace(s, @"[/\\?%*:|""<>]", "-").Trim();
 }
